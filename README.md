@@ -23,6 +23,16 @@ To preserve the name for its original owner, we renamed this project to hey.
 macOS:
 -  [Homebrew](https://brew.sh/) users can use `brew install hey`.
 
+linux:
+```
+$ wget https://hey-release.s3.us-east-2.amazonaws.com/hey_linux_amd64
+$ mv hey_linux_amd64 hey 
+$ chmod +x hey
+$ sudo mv hey /usr/local/bin/
+$ hey --help
+```
+
+
 ## Usage
 
 hey runs provided number of requests in the provided concurrency level and prints stats.
@@ -149,3 +159,16 @@ go build -o ./bin/hey.exe
 4. 動態產資料   rakyll#294
 5. post會因為EOF壞掉  rakyll#285
 6. 弱點   rakyll#284 
+7. linux install rakyll # 250
+
+
+linux:
+```
+$ wget https://github.com/kevin811103/hey/releases/download/v0.1.5/hey_linux_amd64
+$ mv hey_linux_amd64 hey 
+$ chmod +x hey
+$ sudo mv hey /usr/local/bin/
+$ hey --help
+```
+
+目前還是失敗 再研究
