@@ -73,7 +73,7 @@ func TestQps(t *testing.T) {
 }
 
 func TestRequest(t *testing.T) {
-	var uri, contentType, some, auth string
+	var uri, contentType, some,method, auth string
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		uri = r.RequestURI
 		contentType = r.Header.Get("Content-type")

@@ -38,6 +38,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"math"
 	"strings"
 	"text/template"
 )
@@ -80,6 +81,11 @@ func histogram(buckets []Bucket) string {
 			max = v
 		}
 	}
+	// Compute the minimum number of characters needed to print the marks and counts 
+	mrkLen := 4 + int32(math.Ceil(math.Log(buckets[len(buckets)-1].Mark + 1)/math.Log(10)))
+	cntLen := 2 + int32(math.Ceil(math.Log(float64(max + 1))/math.Log(10)))
+	fmtStr := fmt.Sprintf("  %%%d.3f %%%ds|%%v\n", mrkLen, cntLen)
+
 	res := new(bytes.Buffer)
 	for i := 0; i < len(buckets); i++ {
 		// Normalize bar lengths.
@@ -87,40 +93,42 @@ func histogram(buckets []Bucket) string {
 		if max > 0 {
 			barLen = (buckets[i].Count*40 + max/2) / max
 		}
-		res.WriteString(fmt.Sprintf("  %4.3f [%v]\t|%v\n", buckets[i].Mark, buckets[i].Count, strings.Repeat(barChar, barLen)))
+		// res.WriteString(fmt.Sprintf("  %4.3f [%v]\t|%v\n", buckets[i].Mark, buckets[i].Count, strings.Repeat(barChar, barLen)))
+		fmt.Fprintf(res, fmtStr, buckets[i].Mark, fmt.Sprintf("[%v]", buckets[i].Count), strings.Repeat(barChar, barLen))
 	}
 	return res.String()
 }
 
 var (
 	defaultTmpl = `
-Summary:
-  Total:	{{ formatNumber .Total.Seconds }} secs
-  Slowest:	{{ formatNumber .Slowest }} secs
-  Fastest:	{{ formatNumber .Fastest }} secs
-  Average:	{{ formatNumber .Average }} secs
-  Requests/sec:	{{ formatNumber .Rps }}
+總結報告:
+  總耗時:	{{ formatNumber .Total.Seconds }} 秒
+  最慢請求耗時:	{{ formatNumber .Slowest }} 秒
+  最快請求耗時:	{{ formatNumber .Fastest }} 秒
+  平均:	{{ formatNumber .Average }} 秒
+  每秒處理請求數:	{{ formatNumber .Rps }}
+  QPS:       {{ formatNumber .Qps }}
   {{ if gt .SizeTotal 0 }}
-  Total data:	{{ .SizeTotal }} bytes
-  Size/request:	{{ .SizeReq }} bytes{{ end }}
+  總數據:	{{ .SizeTotal }} bytes
+  尺寸/要求:	{{ .SizeReq }} bytes{{ end }}
 
-Response time histogram:
+  響應時間直方圖:
 {{ histogram .Histogram }}
 
-Latency distribution:{{ range .LatencyDistribution }}
-  {{ .Percentage }}%% in {{ formatNumber .Latency }} secs{{ end }}
+延遲分佈:{{ range .LatencyDistribution }}
+  {{ .Percentage }}%% in {{ formatNumber .Latency }} 秒{{ end }}
 
-Details (average, fastest, slowest):
-  DNS+dialup:	{{ formatNumber .AvgConn }} secs, {{ formatNumber .ConnMax }} secs, {{ formatNumber .ConnMin }} secs
-  DNS-lookup:	{{ formatNumber .AvgDNS }} secs, {{ formatNumber .DnsMax }} secs, {{ formatNumber .DnsMin }} secs
-  req write:	{{ formatNumber .AvgReq }} secs, {{ formatNumber .ReqMax }} secs, {{ formatNumber .ReqMin }} secs
-  resp wait:	{{ formatNumber .AvgDelay }} secs, {{ formatNumber .DelayMax }} secs, {{ formatNumber .DelayMin }} secs
-  resp read:	{{ formatNumber .AvgRes }} secs, {{ formatNumber .ResMax }} secs, {{ formatNumber .ResMin }} secs
+  細節  (average, fastest, slowest):
+  DNS+dialup:	{{ formatNumber .AvgConn }} 秒, {{ formatNumber .ConnMax }} 秒, {{ formatNumber .ConnMin }} 秒
+  DNS-lookup:	{{ formatNumber .AvgDNS }} 秒, {{ formatNumber .DnsMax }} 秒, {{ formatNumber .DnsMin }} 秒
+  req write:	{{ formatNumber .AvgReq }} 秒, {{ formatNumber .ReqMax }} 秒, {{ formatNumber .ReqMin }} 秒
+  resp wait:	{{ formatNumber .AvgDelay }} 秒, {{ formatNumber .DelayMax }} 秒, {{ formatNumber .DelayMin }} 秒
+  resp read:	{{ formatNumber .AvgRes }} 秒, {{ formatNumber .ResMax }} 秒, {{ formatNumber .ResMin }} 秒
 
-Status code distribution:{{ range $code, $num := .StatusCodeDist }}
+  狀態碼分布:{{ range $code, $num := .StatusCodeDist }}
   [{{ $code }}]	{{ $num }} responses{{ end }}
 
-{{ if gt (len .ErrorDist) 0 }}Error distribution:{{ range $err, $num := .ErrorDist }}
+{{ if gt (len .ErrorDist) 0 }}錯誤分布:{{ range $err, $num := .ErrorDist }}
   [{{ $num }}]	{{ $err }}{{ end }}{{ end }}
 `
 	csvTmpl = `{{ $connLats := .ConnLats }}{{ $dnsLats := .DnsLats }}{{ $dnsLats := .DnsLats }}{{ $reqLats := .ReqLats }}{{ $delayLats := .DelayLats }}{{ $resLats := .ResLats }}{{ $statusCodeLats := .StatusCodes }}{{ $offsets := .Offsets}}response-time,DNS+dialup,DNS,Request-write,Response-delay,Response-read,status-code,offset{{ range $i, $v := .Lats }}

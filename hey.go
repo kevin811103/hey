@@ -69,29 +69,29 @@ var (
 var usage = `Usage: hey [options...] <url>
 
 Options:
-  -n  Number of requests to run. Default is 200.
-  -c  Number of workers to run concurrently. Total number of requests cannot
-      be smaller than the concurrency level. Default is 50.
-  -q  Rate limit, in queries per second (QPS) per worker. Default is no rate limit.
-  -z  Duration of application to send requests. When duration is reached,
-      application stops and exits. If duration is specified, n is ignored.
-      Examples: -z 10s -z 3m.
-  -o  Output type. If none provided, a summary is printed.
-      "csv" is the only supported alternative. Dumps the response
-      metrics in comma-separated values format.
+  -n 要運行的請求數。默認值為 200。
+  -c 同時運行的工作線程數。請求總數不能
+      小於並發級別。默認值為 50。
+  -q 速率限制，以每個工作線程每秒的查詢次數 (QPS) 為單位。默認情況下沒有速率限制。
+  -z 應用程序發送請求的持續時間。當持續時間達到時，
+      應用程序停止並退出。如果指定了持續時間，則忽略 n。
+      示例：-z 10s -z 3m。
+  -o 輸出類型。如果未提供，則打印摘要。
+      “csv”是唯一受支持的替代方案。轉儲響應
+      逗號分隔值格式的指標。
 
-  -m  HTTP method, one of GET, POST, PUT, DELETE, HEAD, OPTIONS.
-  -H  Custom HTTP header. You can specify as many as needed by repeating the flag.
-      For example, -H "Accept: text/html" -H "Content-Type: application/xml" .
-  -t  Timeout for each request in seconds. Default is 20, use 0 for infinite.
-  -A  HTTP Accept header.
-  -d  HTTP request body.
-  -D  HTTP request body from file. For example, /home/user/file.txt or ./file.txt.
-  -T  Content-type, defaults to "text/html".
-  -U  User-Agent, defaults to version "hey/0.0.1".
-  -a  Basic authentication, username:password.
-  -x  HTTP Proxy address as host:port.
-  -h2 Enable HTTP/2.
+  -m HTTP 方法，GET、POST、PUT、DELETE、HEAD、OPTIONS 之一。
+  -H 自定義 HTTP 標頭。您可以通過重複該標誌來根據需要指定任意數量。
+      例如， -H "接受：text/html" -H "內容類型：application/xml" 。
+  -t 每個請求的超時時間（以秒為單位）。默認值為 20，使用 0 表示無限。
+  -HTTP 接受標頭。
+  -d HTTP 請求正文。
+  -D 來自文件的 HTTP 請求正文。例如，/home/user/file.txt 或 ./file.txt。
+  -T 內容類型，默認為“text/html”。
+  -U User-Agent，默認版本“hey/0.0.1”。
+  -a 基本身份驗證，用戶名：密碼。
+  -x HTTP 代理地址作為主機:端口。
+  -h2 啟用 HTTP/2。
 
   -host	HTTP Host header.
 
