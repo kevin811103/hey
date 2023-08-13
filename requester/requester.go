@@ -186,7 +186,7 @@ func (b *Work) makeRequest(c *http.Client) {
 		size = resp.ContentLength
 		code = resp.StatusCode
 		io.Copy(io.Discard, resp.Body)
-		resp.Body.Close()
+		defer resp.Body.Close()
 	}
 	t := now()
 	resDuration = t - resStart

@@ -147,3 +147,4 @@ go build -o ./bin/hey.exe
 2. 直方圖如果爆掉的處理 rakyll#155
 3. 增加報告最小容量 rakyll#152
 4. 動態產資料   rakyll#294
+5. post會因為EOF壞掉  rakyll#285
