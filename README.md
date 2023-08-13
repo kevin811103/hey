@@ -171,4 +171,11 @@ $ sudo mv hey /usr/local/bin/
 $ hey --help
 ```
 
-目前還是失敗 再研究
+arm:
+```
+$ wget https://github.com/kevin811103/hey/releases/download/v0.1.5/hey_linux_arm
+$ mv hey_linux_amd64 hey 
+$ chmod +x hey
+$ sudo mv hey /usr/local/bin/
+$ hey --help
+```
