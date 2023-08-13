@@ -36,7 +36,6 @@ type report struct {
 	slowest  float64
 	average  float64
 	rps      float64
-	qps     float64
 	avgConn     float64
 	avgDNS      float64
 	avgReq      float64
@@ -166,7 +165,6 @@ func (r *report) snapshot() Report {
 		Total:       r.total,
 		ErrorDist:   r.errorDist,
 		NumRes:      r.numRes,
-		Qps:         r.qps,
 		Lats:        make([]float64, len(r.lats)),
 		ConnLats:    make([]float64, len(r.lats)),
 		DnsLats:     make([]float64, len(r.lats)),
@@ -217,8 +215,6 @@ func (r *report) snapshot() Report {
 	snapshot.DelayMin = r.delayLats[len(r.delayLats)-1]
 	snapshot.ResMax = r.resLats[0]
 	snapshot.ResMin = r.resLats[len(r.resLats)-1]
-
-	snapshot.Qps = snapshot.AvgTotal/snapshot.Average
 
 	statusCodeDist := make(map[int]int, len(snapshot.StatusCodes))
 	for _, statusCode := range snapshot.StatusCodes {
@@ -288,7 +284,6 @@ type Report struct {
 	Slowest  float64
 	Average  float64
 	Rps      float64
-	Qps      float64
 
 	AvgConn  float64
 	AvgDNS   float64

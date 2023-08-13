@@ -107,7 +107,6 @@ var (
   最快請求耗時:	{{ formatNumber .Fastest }} 秒
   平均:	{{ formatNumber .Average }} 秒
   每秒處理請求數:	{{ formatNumber .Rps }}
-  QPS:       {{ formatNumber .Qps }}
   {{ if gt .SizeTotal 0 }}
   總數據:	{{ .SizeTotal }} bytes
   尺寸/要求:	{{ .SizeReq }} bytes{{ end }}

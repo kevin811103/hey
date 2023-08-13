@@ -148,3 +148,4 @@ go build -o ./bin/hey.exe
 3. 增加報告最小容量 rakyll#152
 4. 動態產資料   rakyll#294
 5. post會因為EOF壞掉  rakyll#285
+6. 弱點   rakyll#284 
